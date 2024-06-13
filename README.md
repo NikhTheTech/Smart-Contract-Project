@@ -27,6 +27,3 @@
 2. Install Solidity development environment (e.g., Remix, Truffle).
 3. Deploy and interact with the contract.
 
-## License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
