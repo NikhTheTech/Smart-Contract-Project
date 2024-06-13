@@ -1,0 +1,36 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract SimpleContract {
+    address public owner;
+    uint256 public value;
+
+    constructor() {
+        owner = msg.sender;
+    }
+
+    modifier onlyOwner() {
+        require(msg.sender == owner, "Only the owner can call this function.");
+        _;
+    }
+
+    function setValue(uint256 _value) public onlyOwner {
+        // Using require to validate the input
+        require(_value > 0, "Value must be greater than zero.");
+        value = _value;
+    }
+
+    function incrementValue() public onlyOwner {
+        // Using assert to ensure the state is as expected
+        assert(value > 0);
+        value += 1;
+    }
+
+    function resetValue() public onlyOwner {
+        // Using revert to handle unexpected conditions
+        if (value == 0) {
+            revert("Value is already zero.");
+        }
+        value = 0;
+    }
+}
