@@ -1,36 +1,36 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-contract SimpleContract {
-    address public owner;
-    uint256 public value;
+contract Checks {
+    // Limit in Ether
+    uint public limit = 10;
 
-    constructor() {
-        owner = msg.sender;
+    // Function to get the balance of an address in Ether
+    function getBalance(address _address) public view returns (uint256) {
+        return _address.balance / 1 ether;
     }
 
-    modifier onlyOwner() {
-        require(msg.sender == owner, "Only the owner can call this function.");
-        _;
+    // Function to change the limit, ensuring it is set to 10
+    function changeLimit(uint newLimit) public {
+        // This should assert that newLimit is equal to 10
+        assert(newLimit <= 10);
+        limit = newLimit;
     }
 
-    function setValue(uint256 _value) public onlyOwner {
-        // Using require to validate the input
-        require(_value > 0, "Value must be greater than zero.");
-        value = _value;
-    }
+    // Custom error for exceeding single transfer limit
+    error SingleTransferLimit(string message, uint limit);
 
-    function incrementValue() public onlyOwner {
-        // Using assert to ensure the state is as expected
-        assert(value > 0);
-        value += 1;
-    }
+    function transfer(address payable _receiver) public payable {
 
-    function resetValue() public onlyOwner {
-        // Using revert to handle unexpected conditions
-        if (value == 0) {
-            revert("Value is already zero.");
+        // Require at least 1 Ether to be sent
+        require(msg.value >= 1 ether, "At least 1 ether should be sent");
+
+        // Check if the sent amount exceeds the limit and revert if true
+        if (msg.value > limit * 1 ether) {
+            revert SingleTransferLimit("Single Transfer Limit Exceeded!", limit);
         }
-        value = 0;
+
+        // Transfer the sent amount to the receiver
+        _receiver.transfer(msg.value);
     }
 }
