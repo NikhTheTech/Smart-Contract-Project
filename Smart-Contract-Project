@@ -10,9 +10,9 @@ contract Checks {
         return _address.balance / 1 ether;
     }
 
-    // Function to change the limit, ensuring it is set to 10
+    // Function to change the limit
     function changeLimit(uint newLimit) public {
-        // This should assert that newLimit is equal to 10
+        // This should assert that newLimit is less than or equal to 10
         assert(newLimit <= 10);
         limit = newLimit;
     }
