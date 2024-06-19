@@ -1,29 +1,69 @@
-# SimpleContract
+# Checks Smart Contract
 
-## Overview
+This Solidity smart contract is designed to manage Ether transfers with specific limits and balance checks. It includes functions to get the balance of an address, change a transfer limit, and transfer Ether with constraints.
 
-`SimpleContract` is a basic smart contract that demonstrates the use of Solidity's `require()`, `assert()`, and `revert()` statements. The contract allows an owner to set, increment, and reset a value with basic validation checks.
+## Contract Overview
 
-## Features
-
-- **Ownership:** Only the contract owner can modify the state.
-- **Value Management:** Set, increment, and reset a stored value with safety checks.
+The `Checks` contract provides the following functionalities:
+- Get the balance of a specified address in Ether.
+- Change the Ether transfer limit (with an assertion to prevent exceeding the limit).
+- Transfer Ether to a specified address with constraints on the minimum and maximum transfer amounts.
 
 ## Functions
 
-- `setValue(uint256 _value)`: Sets the value to `_value` if `_value` is greater than zero.
-- `incrementValue()`: Increments the value by 1 if the value is greater than zero.
-- `resetValue()`: Resets the value to zero if it is not already zero.
+### getBalance(address _address) public view returns (uint256)
+
+This function returns the balance of the given address in Ether.
+
+**Parameters:**
+- `_address`: The address whose balance you want to check.
+
+**Returns:**
+- The balance of the specified address in Ether.
+
+### changeLimit(uint newLimit) public
+
+This function allows changing the transfer limit, ensuring it does not exceed 10 Ether.
+
+**Parameters:**
+- `newLimit`: The new transfer limit in Ether.
+
+**Reverts:**
+- If the new limit is greater than 10 Ether.
+
+### transfer(address payable _receiver) public payable
+
+This function transfers Ether to the specified receiver address, ensuring the transfer amount is within the specified limits.
+
+**Parameters:**
+- `_receiver`: The address to which Ether will be transferred.
+
+**Requires:**
+- At least 1 Ether to be sent.
+
+**Reverts:**
+- If the transfer amount exceeds the specified limit.
+
+## Custom Error
+
+### SingleTransferLimit
+
+This custom error is used to revert the transaction if the transfer amount exceeds the specified limit.
+
+**Parameters:**
+- `message`: The error message.
+- `limit`: The maximum transfer limit.
 
 ## Usage
 
-1. Deploy the contract.
-2. Only the contract owner can call the functions to modify the state.
-3. Use `setValue`, `incrementValue`, and `resetValue` functions as needed.
+1. **Deploy the Contract:**
+   Deploy the `Checks` contract on the Ethereum network.
 
-## Development
+2. **Get Balance:**
+   Call the `getBalance` function with an address to check its Ether balance.
 
-1. Clone the repository.
-2. Install Solidity development environment (e.g., Remix, Truffle).
-3. Deploy and interact with the contract.
+3. **Change Limit:**
+   Use the `changeLimit` function to set a new transfer limit (must be 10 Ether or less).
 
+4. **Transfer Ether:**
+   Use the `transfer` function to send Ether to a specified address, ensuring the amount is at least 1 Ether and does not exceed the limit.
